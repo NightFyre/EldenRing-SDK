@@ -10,70 +10,115 @@
 #pragma pack(push, 0x01)
 namespace HEXINTON
 {
-	uint32_t ChrIns::GetHP()
+	//	WorldCharacterManager
+	LocalPlayer* WorldCharacterManager::GetLocalPlayer() { return this->pLocalPlayer; }
+
+	//	LocalPlayer
+	PlayerInstance* LocalPlayer::GetPlayerInstance() { return this->pPlayer; }
+
+	//	PlayerInstance
+	CharacterModules* PlayerInstance::GetCharacterModules() { return this->pCharModules; }
+	int32_t	PlayerInstance::GetCharType() { return this->CharacterType; }
+	int32_t	PlayerInstance::GetTeam() { return this->TeamType; }
+	void PlayerInstance::SetCharType(const int32_t newType) { this->CharacterType = newType; }
+	void PlayerInstance::SetTeam(const int32_t newTeam) { this->TeamType = newTeam; }
+
+	bool PlayerInstance::GetHP(int32_t& outHealth)
 	{
+		bool result = FALSE;
+
 		// Get Modules
-		ChrModules* modules = this->Modules;
+		CharacterModules* modules = this->pCharModules;
 		if (modules == nullptr)
-			return -1;
+			return result;
 
 		// Obtain Unit Data
-		UnitData* unitData = modules->UnitData;
-		if (unitData == nullptr)
-			return -1;
+		CSCharData* charData = modules->GetCharData();
+		if (charData == nullptr)
+			return result;
 
 		//	Get Current Health
-		return unitData->Health;
+		outHealth = charData->GetHealth();
+		return TRUE;
 	}
 
-	uint32_t ChrIns::GetMaxHP()
+	void PlayerInstance::SetHP(int32_t value)
 	{
+		bool result = FALSE;
+
 		// Get Modules
-		ChrModules* modules = this->Modules;
+		CharacterModules* modules = this->pCharModules;
 		if (modules == nullptr)
-			return -1;
+			return;
 
 		// Obtain Unit Data
-		UnitData* unitData = modules->UnitData;
-		if (unitData == nullptr)
-			return -1;
+		CSCharData* charData = modules->GetCharData();
+		if (charData == nullptr)
+			return;
 
-		return unitData->MaxHealth;
+		//	Get Current Health
+		charData->SetHealth(value);
 	}
 
-	Vector3 ChrIns::GetPos()
+	bool PlayerInstance::GetPos(Vector3& out)
 	{
+		bool result = FALSE;
+
 		// Get Modules
-		ChrModules* modules = this->Modules;
+		CharacterModules* modules = this->pCharModules;
 		if (modules == nullptr)
-			return { 0, 0, 0 };
+			return result;
 
 		// Obtain physics
-		ChrPhysics* physics = modules->Physics;
+		CSCharPhysics* physics = modules->GetCharPhysics();
 		if (physics == nullptr)
-			return { 0, 0, 0 };
+			return result;
 
-		return physics->Pos;
+		out = physics->GetLocalPosition();
+		return TRUE;
 	}
 
-	void ChrIns::SetPos(Vector3 In)
+	void PlayerInstance::SetPos(Vector3 In)
 	{
+		bool result = FALSE;
+
 		// Get Modules
-		ChrModules* modules = this->Modules;
+		CharacterModules* modules = this->pCharModules;
 		if (modules == nullptr)
 			return;
 
 		// Obtain physics
-		ChrPhysics* physics = modules->Physics;
+		CSCharPhysics* physics = modules->GetCharPhysics();
 		if (physics == nullptr)
 			return;
 
-		physics->Pos = In;
+		physics->SetLocalPosition(In);
 	}
 
-	float ChrIns::GetDistance(Vector3 Other)
+	float PlayerInstance::GetDistance(Vector3 Other)
 	{
-		return GetPos().DistTo(Other);
+		Vector3 cPos;
+		GetPos(cPos);
+		return cPos.DistTo(Other);
 	}
+
+
+	//	CSCharModules
+	CSCharData* CharacterModules::GetCharData() { return this->pCharData; }
+	CSCharPhysics* CharacterModules::GetCharPhysics() { return this->pCharPhysics; }
+	CSPlayerDamage* CharacterModules::GetPlayerDamage() { return this->pPlayerDamage; }
+
+	//	CSCharData
+	int32_t CSCharData::GetHealth() { return this->CurrentHealth; }
+	void CSCharData::SetHealth(const int32_t& value) { this->CurrentHealth = value; }
+	int32_t CSCharData::GetMana() { return this->CurrentMana; }
+	void CSCharData::SetMana(const int32_t& value) { this->CurrentMana = value; }
+	int32_t CSCharData::GetStamina() { return this->CurrentStamina; }
+	void CSCharData::SetStamina(const int32_t& value) { this->CurrentStamina = value; }
+
+	//	CSCharPhysics
+	Vector3 CSCharPhysics::GetLocalPosition() { return this->RelativePosition; }
+	void CSCharPhysics::SetLocalPosition(Vector3 newPosition) { this->RelativePosition = newPosition; }
+	void CSCharPhysics::ToggleGravity() { this->bNoGravity ^= 1; }
 }
 #pragma pack(pop)
