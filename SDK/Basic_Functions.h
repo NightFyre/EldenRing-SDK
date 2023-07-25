@@ -16,7 +16,7 @@ namespace HEXINTON
 	// --------------------------------------------------
 	// # Global functions
 	// --------------------------------------------------
-	bool InitSdk(const std::string& moduleName, uintptr_t gGameMan, uintptr_t gGameDataMan, uintptr_t gWorldCharMan);
+	bool InitSdk(const std::string& moduleName, unsigned int gGameMan, unsigned int gGameDataMan, unsigned int gWorldCharMan);
 	bool InitSdk();
 	void ShutdownSdk();
 

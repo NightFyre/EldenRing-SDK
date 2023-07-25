@@ -13,9 +13,9 @@ namespace HEXINTON
 	class CGlobals
 	{
 	public:
-		static class GameManager*				GGameMan;
-		static class GameDataManager*			GGameDataMan;
-		static class WorldCharacterManager*		GWorldCharMan;
+		static class GameManager**				GGameMan;
+		static class GameDataManager**			GGameDataMan;
+		static class WorldCharacterManager**	GWorldCharMan;
 	};
 
 	class GameManager
