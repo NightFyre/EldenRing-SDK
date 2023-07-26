@@ -11,9 +11,9 @@
 namespace HEXINTON
 {
 
-	GameManager* CGlobals::GGameMan;
-	GameDataManager* CGlobals::GGameDataMan;
-	WorldCharacterManager* CGlobals::GWorldCharMan;
+	GameManager**			CGlobals::GGameMan;
+	GameDataManager**		CGlobals::GGameDataMan;
+	WorldCharacterManager**	CGlobals::GWorldCharMan;
 
 	//---------------------------------------------------------------------------------------------------
 	// 
@@ -22,22 +22,27 @@ namespace HEXINTON
 	//---------------------------------------------------------------------------------------------------
 
     bool InitSdk() { return InitSdk("EldenRing.exe", 0x3CE0708, 0x3CD4D88, 0x3CDCDD8); }
-	bool InitSdk(const std::string& moduleName, uintptr_t gGameMan, uintptr_t gGameDataMan, uintptr_t gWorldCharMan)
+	bool InitSdk(const std::string& moduleName, unsigned int gGameMan, unsigned int gGameDataMan, unsigned int gWorldCharMan)
 	{
 		auto mBaseAddress = reinterpret_cast<uintptr_t>(GetModuleHandleA(moduleName.c_str()));
 		if (!mBaseAddress)
-			return false;
+			return FALSE;
 
-		CGlobals::GGameMan = reinterpret_cast<HEXINTON::GameManager*>(*(reinterpret_cast<__int64*>(mBaseAddress + gGameMan)));
-		CGlobals::GGameDataMan = reinterpret_cast<HEXINTON::GameDataManager*>(*(reinterpret_cast<__int64*>(mBaseAddress + gGameDataMan)));
-		CGlobals::GWorldCharMan = reinterpret_cast<HEXINTON::WorldCharacterManager*>(*(reinterpret_cast<__int64*>(mBaseAddress + gWorldCharMan)));
-
+		CGlobals::GGameMan			= reinterpret_cast<GameManager**>(mBaseAddress + gGameMan);
+		CGlobals::GGameDataMan		= reinterpret_cast<GameDataManager**>(mBaseAddress + gGameDataMan);
+		CGlobals::GWorldCharMan		= reinterpret_cast<WorldCharacterManager**>(mBaseAddress + gWorldCharMan);    
+		
+		if (!CGlobals::GGameMan || !CGlobals::GGameDataMan || !CGlobals::GWorldCharMan)
+			return FALSE;
+		
 		return TRUE;
 	}
 
 	void ShutdownSdk()
 	{
-
+		CGlobals::GGameMan			= nullptr;
+		CGlobals::GGameDataMan		= nullptr;
+		CGlobals::GWorldCharMan		= nullptr;
 	}
 
 	unsigned int GetVtblOffset(void* czInstance, const char* dwModule)
