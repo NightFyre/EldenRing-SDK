@@ -73,16 +73,19 @@ void CheatThread()
 	}
 }
 
-static 
+//	execute
 void WINAPI MainThread(LPVOID hInst)
 {
+	//	initialize sdk
 	g_running = HEXINTON::InitSdk();
 
+	//	create cheat thread
 	std::thread ThreadWorker(CheatThread);
 	
+	//	main loop
 	do
 	{
-		// Toggle health cheat
+		//	toggle health cheat
 		if (GetAsyncKeyState(VK_NUMPAD1) & 1)
 			ToggleOption(bInfHealth);
 
@@ -94,20 +97,23 @@ void WINAPI MainThread(LPVOID hInst)
 		if (GetAsyncKeyState(VK_NUMPAD3) & 1)
 			ToggleOption(bInfStamina);
 
-		// Shutdown SDK & EXIT
+		//	Shutdown SDK & EXIT
 		if (GetAsyncKeyState(VK_END) & 1)
 			ToggleOption(g_running);
 
 	} while (g_running);
 
+	//	wait for cheat thread to exit
 	ThreadWorker.join();
 
+	//	shutdown sdk
 	HEXINTON::ShutdownSdk();
 
-	//	Exit
+	//	exit
     FreeLibraryAndExitThread(static_cast<HMODULE>(hInst), g_running);
 }
 
+//	Attach to process and create thread
 BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved )
 {
     if (ul_reason_for_call == DLL_PROCESS_ATTACH)
