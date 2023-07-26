@@ -1,51 +1,108 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "pch.h"
 
-static bool g_running = FALSE;
-void WINAPI MainThread(LPVOID hInst)
+static bool g_running		= FALSE;		//	SDK State
+static bool bInfHealth		= FALSE;		//	infinite health cheat toggle
+static bool bInfMana		= FALSE;		//	infinite mana cheat toggle
+static bool bInfStamina		= FALSE;		//	infinite stamina cheat toggle
+
+//	Template function for toggling options by passed boolean reference
+//	includes a nice sound effect to notify users of an on and off state
+void ToggleOption(bool& ref)
 {
-    // Initialize SDK
-	g_running = HEXINTON::InitSdk();
-	
-	do
+	ref ^= 1;
+	switch (ref)
 	{
-		//	Test Access Player Health
-		if (GetAsyncKeyState(VK_NUMPAD0) & 1)
+		case TRUE:	Beep(300, 300);	break;	//	ACTIVATED
+		case FALSE: Beep(200, 300);	break;	//	DE-ACTIVATED
+	}
+}
+
+//	Background thread for executing cheat methods.
+//	not really necessary here, though its been included as an example
+void CheatThread()
+{
+	while (g_running)
+	{
+		auto worldCharMan = *HEXINTON::CGlobals::GWorldCharMan;
+		
+		//	Set health to max health
+		if (bInfHealth)
 		{
-			// Get World Char Man
-			auto worldCharMan = *HEXINTON::CGlobals::GWorldCharMan;
 			if (worldCharMan != nullptr)
 			{
-				// Get Local Player
-				auto localPlayer = worldCharMan->GetLocalPlayer();
-				if (localPlayer != nullptr)
+				auto charData = worldCharMan->GetLocalPlayerCharData();
+				if (charData != nullptr)
 				{
-					// Get Player Instance
-					auto playerInstance = localPlayer->GetPlayerInstance();
-					if (playerInstance != nullptr)
-					{
-						// Get char modules
-						auto charModules = playerInstance->GetCharacterModules();
-						if (charModules != nullptr)
-						{
-							//	Get char data
-							auto charData = charModules->GetCharData();
-							if (charData != nullptr)
-								charData->SetHealth(NULL);	// kills the local player
-						}
-					}
+					auto maxHP = charData->GetMaxHealth();
+					if (maxHP > NULL)
+						charData->SetHealth(maxHP);
 				}
 			}
 		}
 
-		// Shutdown SDK & EXIT
-		if (GetAsyncKeyState(VK_END) & 1)
+		//	Set mana to max mana
+		if (bInfMana)
 		{
-			HEXINTON::ShutdownSdk();
-			g_running = FALSE;
+			if (worldCharMan != nullptr)
+			{
+				auto charData = worldCharMan->GetLocalPlayerCharData();
+				if (charData != nullptr)
+				{
+					auto maxMP = charData->GetMaxMana();
+					if (maxMP > NULL)
+						charData->SetMana(maxMP);
+				}
+			}
 		}
 
+		//	Set stamina to max stamina
+		if (bInfStamina)
+		{
+			if (worldCharMan != nullptr)
+			{
+				auto charData = worldCharMan->GetLocalPlayerCharData();
+				if (charData != nullptr)
+				{
+					auto maxSP = charData->GetMaxStamina();
+					if (maxSP > NULL)
+						charData->SetStamina(maxSP);
+				}
+			}
+		}
+	}
+}
+
+static 
+void WINAPI MainThread(LPVOID hInst)
+{
+	g_running = HEXINTON::InitSdk();
+
+	std::thread ThreadWorker(CheatThread);
+	
+	do
+	{
+		// Toggle health cheat
+		if (GetAsyncKeyState(VK_NUMPAD1) & 1)
+			ToggleOption(bInfHealth);
+
+		//	toggle mana cheat
+		if (GetAsyncKeyState(VK_NUMPAD2) & 1)
+			ToggleOption(bInfMana);
+
+		//	toggle stamina cheat
+		if (GetAsyncKeyState(VK_NUMPAD3) & 1)
+			ToggleOption(bInfStamina);
+
+		// Shutdown SDK & EXIT
+		if (GetAsyncKeyState(VK_END) & 1)
+			ToggleOption(g_running);
+
 	} while (g_running);
+
+	ThreadWorker.join();
+
+	HEXINTON::ShutdownSdk();
 
 	//	Exit
     FreeLibraryAndExitThread(static_cast<HMODULE>(hInst), g_running);

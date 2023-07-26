@@ -17,9 +17,63 @@ namespace HEXINTON
 	LocalPlayer* WorldCharacterManager::GetLocalPlayer() 
 	{
 		LocalPlayer* result = nullptr;
+		if (this == nullptr)
+			return result;
 
 		if (this->pLocalPlayer != nullptr)
 			result = this->pLocalPlayer;
+
+		return result;
+	}
+
+	PlayerInstance* WorldCharacterManager::GetLocalPlayerInstance()
+	{
+		PlayerInstance* result = nullptr;
+		if (this == nullptr)
+			return result;
+
+		auto localPlayer = this->GetLocalPlayer();
+		if (localPlayer != nullptr)
+			result = localPlayer->GetPlayerInstance();
+
+		return result;
+	}
+
+	CharacterModules* WorldCharacterManager::GetLocalPlayerCharModules()
+	{
+		CharacterModules* result = nullptr;
+		if (this == nullptr)
+			return result;
+
+		auto playerInstance = this->GetLocalPlayerInstance();
+		if (playerInstance != nullptr)
+			result = playerInstance->GetCharacterModules();
+
+		return result;
+	}
+
+	CSCharData* WorldCharacterManager::GetLocalPlayerCharData()
+	{
+		CSCharData* result = nullptr;
+		if (this == nullptr)
+			return result;
+
+		auto charModules = this->GetLocalPlayerCharModules();
+		if (charModules != nullptr)
+			result = charModules->GetCharData();
+
+		return result;
+	}
+
+	CSCharPhysics* WorldCharacterManager::GetLocalPlayerCharPhysics()
+	{
+		CSCharPhysics* result = nullptr;
+		if (this == nullptr)
+			return result;
+
+		auto charModules = this->GetLocalPlayerCharModules();
+		if (charModules != nullptr)
+			result = charModules->GetCharPhysics();
 
 		return result;
 	}
@@ -172,10 +226,13 @@ namespace HEXINTON
 	// # CSCharData
 	// --------------------------------------------------
 	int32_t CSCharData::GetHealth() { return this->CurrentHealth; }
+	int32_t CSCharData::GetMaxHealth() { return this->MaxHealth; }
 	void CSCharData::SetHealth(const int32_t& value) { this->CurrentHealth = value; }
 	int32_t CSCharData::GetMana() { return this->CurrentMana; }
+	int32_t CSCharData::GetMaxMana() { return this->MaxMana; }
 	void CSCharData::SetMana(const int32_t& value) { this->CurrentMana = value; }
 	int32_t CSCharData::GetStamina() { return this->CurrentStamina; }
+	int32_t CSCharData::GetMaxStamina() { return this->MaxStamina; }
 	void CSCharData::SetStamina(const int32_t& value) { this->CurrentStamina = value; }
 
 	// --------------------------------------------------
