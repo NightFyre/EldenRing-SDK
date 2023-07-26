@@ -25,11 +25,20 @@ void CheatThread()
 	while (g_running)
 	{
 		auto worldCharMan = *HEXINTON::CGlobals::GWorldCharMan;
-		
-		//	Set health to max health
-		if (bInfHealth)
+
+		//	Loop through entity array
+		if (worldCharMan != nullptr)
 		{
-			if (worldCharMan != nullptr)
+			auto entArray = worldCharMan->GetEntityArray();
+			auto entCount = entArray.Count();
+			for (auto ent : entArray)
+			{
+				int32_t out;
+				bool result = ent->GetHP(out);
+			}
+
+			//	Set health to max health
+			if (bInfHealth)
 			{
 				auto charData = worldCharMan->GetLocalPlayerCharData();
 				if (charData != nullptr)
@@ -39,12 +48,9 @@ void CheatThread()
 						charData->SetHealth(maxHP);
 				}
 			}
-		}
 
-		//	Set mana to max mana
-		if (bInfMana)
-		{
-			if (worldCharMan != nullptr)
+			//	Set mana to max mana
+			if (bInfMana)
 			{
 				auto charData = worldCharMan->GetLocalPlayerCharData();
 				if (charData != nullptr)
@@ -54,12 +60,9 @@ void CheatThread()
 						charData->SetMana(maxMP);
 				}
 			}
-		}
 
-		//	Set stamina to max stamina
-		if (bInfStamina)
-		{
-			if (worldCharMan != nullptr)
+			//	Set stamina to max stamina
+			if (bInfStamina)
 			{
 				auto charData = worldCharMan->GetLocalPlayerCharData();
 				if (charData != nullptr)
@@ -70,6 +73,7 @@ void CheatThread()
 				}
 			}
 		}
+
 	}
 }
 

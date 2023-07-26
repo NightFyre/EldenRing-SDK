@@ -36,8 +36,7 @@ namespace HEXINTON
 		char								pad_0008[69360];			//0x0008
 		class LocalPlayer*					pLocalPlayer;				//0x10EF8
 		char								pad_10F00[58032];			//0x10F00
-		void*								pEntArray;					//0x1F1B0
-		void*								pEntArraySize;				//0x1F1B8
+		ElementArray<class PlayerInstance*>		pEntArray;					//0x1F1B0
 	
 	private:
 		virtual void						vf_Function0();
@@ -48,6 +47,7 @@ namespace HEXINTON
 		class CharacterModules*				GetLocalPlayerCharModules();
 		class CSCharData*					GetLocalPlayerCharData();
 		class CSCharPhysics*				GetLocalPlayerCharPhysics();
+		ElementArray<class PlayerInstance*> GetEntityArray();
 	};	//Size: 0x10F00
 
 	class LocalPlayer

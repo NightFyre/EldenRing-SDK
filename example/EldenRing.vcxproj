@@ -159,8 +159,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\SDK.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="SDK.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\SDK\Basic_Functions.cpp">

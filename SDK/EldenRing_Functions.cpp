@@ -78,6 +78,8 @@ namespace HEXINTON
 		return result;
 	}
 
+	ElementArray<class PlayerInstance*> WorldCharacterManager::GetEntityArray() { return this->pEntArray; };
+
 	// --------------------------------------------------
 	// # LocalPlayer
 	// --------------------------------------------------
