@@ -11,9 +11,9 @@
 namespace HEXINTON
 {
 
-	GameManager**			CGlobals::GGameMan;
-	GameDataManager**		CGlobals::GGameDataMan;
-	WorldCharacterManager**	CGlobals::GWorldCharMan;
+	GameManager**				CGlobals::GGameMan;
+	GameDataManager**			CGlobals::GGameDataMan;
+	WorldCharacterManager**		CGlobals::GWorldCharMan;
 
 	//---------------------------------------------------------------------------------------------------
 	// 

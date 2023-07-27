@@ -25,18 +25,17 @@ namespace HEXINTON
         
         int32_t Count()
         {
-            uintptr_t startAddr = reinterpret_cast<uintptr_t>(_data);
-            uintptr_t endAddr = reinterpret_cast<uintptr_t>(_last);
-            auto size = endAddr - startAddr;
-            return size / sizeof(void*);
+            auto dist = reinterpret_cast<uintptr_t>(_last) - reinterpret_cast<uintptr_t>(_data);
+            return static_cast<int32_t>((dist / sizeof(void*)) - sizeof(char));
         }
+
+		ElementType& operator[](int32_t i) { return _data[i]; }
+		const ElementType& operator[](int32_t i) const { return _data[i]; }
 
         ElementType* Data() { return _data; }
         ElementType* begin() { return _data; }
         ElementType* end() { return _data + Count(); }
-        bool IsValidIndex(int32_t i) { return i < Count(); }
-		ElementType& operator[](int32_t i) { return _data[i]; }
-		const ElementType& operator[](int32_t i) const { return _data[i]; }
+        bool IsValidIndex(int32_t i) { return i >= NULL && i < Count(); }
     };
 }
 #pragma pack(pop)
