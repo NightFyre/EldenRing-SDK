@@ -30,7 +30,8 @@ void CheatThread()
 		if (worldCharMan != nullptr)
 		{
 			auto entArray = worldCharMan->GetEntityArray();
-			auto entCount = entArray.Count();
+			auto entArray2 = worldCharMan->dbg_GetEntityArray();
+
 			for (auto ent : entArray)
 			{
 				int32_t out;

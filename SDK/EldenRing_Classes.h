@@ -66,7 +66,8 @@ namespace HEXINTON
 		class CharacterModules*				GetLocalPlayerCharModules();
 		class CSCharData*					GetLocalPlayerCharData();
 		class CSCharPhysics*				GetLocalPlayerCharPhysics();
-		ElementArray<class PlayerInstance*> GetEntityArray();
+		ElementArray<class PlayerInstance*>	GetEntityArray();
+		DebugArray<class PlayerInstance*>	dbg_GetEntityArray();
 	};	//Size: 0x10F00
 	
 	//	AOB : 80 3D ?? ?? ?? ?? 00 0F 85 ?? ?? ?? ?? 32 C0 48
