@@ -79,6 +79,7 @@ namespace HEXINTON
 	}
 
 	ElementArray<class PlayerInstance*> WorldCharacterManager::GetEntityArray() { return this->pEntArray; };
+	DebugArray<class PlayerInstance*> WorldCharacterManager::dbg_GetEntityArray() { return DebugArray<PlayerInstance*>(this->pEntArray); };
 
 	// --------------------------------------------------
 	// # LocalPlayer
